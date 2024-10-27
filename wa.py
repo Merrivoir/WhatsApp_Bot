@@ -17,7 +17,7 @@ phonenumber = input('Введите номер для которого прив�
 options = webdriver.ChromeOptions()
 options.add_argument('--allow-profiles-outside-user-dir')
 options.add_argument('--enable-profile-shortcut-manager')
-options.add_argument('--user-data-dir=C:\\MEGA\\profiles\\chrome') # УКАЖИТЕ ПУТЬ ГДЕ ЛЕЖИТ ВАШ ФАЙЛ. Советую создать отдельную папку.
+options.add_argument('--user-data-dir=C:\\MEGA') # УКАЖИТЕ ПУТЬ ГДЕ ЛЕЖИТ ВАШ ФАЙЛ. Советую создать отдельную папку.
 options.add_argument('--profile-directory=' + phonenumber) #номер телефона для которого проходит авторизация
 options.add_argument('--profiling-flush=10000')
 options.add_argument('--enable-aggressive-domstorage-flushing')
@@ -26,25 +26,5 @@ driver = webdriver.Chrome(options=options)
 
 url = "https://web.whatsapp.com/"
 driver.get(url)
-WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, waElement)))
-sleep(3)
-elements = driver.find_elements(By.CSS_SELECTOR, ".x1iyjqo2.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft.x1rg5ohu._ao3e")
 
-# Явное ожидание элемента, чтобы он был кликабельным
-element = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.CSS_SELECTOR, f'[title="Ольга Львова"]'))
-)
-
-# Кликаем по элементу
-element.click()
-sleep(3)
-placeHolder = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, waInput))
-)
-placeHolder.send_keys("Hello world!")
-sleep(1)
-sendButton = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, waSendButton))
-)
-sendButton.click()
-sleep(200)
+sleep(600)

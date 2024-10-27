@@ -74,7 +74,6 @@ class whatapp():
 # ждём загрузки страницы Whatsapp
         wait.until(EC.element_to_be_clickable((By.XPATH, xpathSearchField)))
 
-
     def finish(self):
 # закрыть все
         self.driver.quit()
