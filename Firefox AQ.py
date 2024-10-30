@@ -10,19 +10,21 @@ import random
 
 waXPInputArea = "/html/body/div[1]/div/div/div[2]/div[4]/div/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]"   #поле для ввода сообщения
 waXPButton = "/html/body/div[1]/div/div/div[2]/div[4]/div/footer/div[1]/div/span/div/div[2]/div[2]/button"          #кнопка отправки сообщения
-number = "+7 747 472 8450"  #чат, в котором обрабатываются сообщения
+number = "РассылПавел"  #чат, в котором обрабатываются сообщения
+unregistered = []
+unsended = []
 
-message = f"""Путешествуй по всему миру, не тратя огромные деньги! ✈️🌍
-💼 Хочешь узнать, как экономить на каждом туре и при этом создавать авторские туры для других?
+message = f"""✈️ Ты любишь путешествовать, но расходы всегда высокие? Мы знаем, как это исправить! 💸
+🌍 Присоединяйся к нашему закрытому чату и узнай, как путешествовать за небольшие деньги, получая максимум удовольствия!
 
-Вступай в наш чат и узнай секреты, как сделать путешествия доступными и выгодными.
+Для тех, кто хочет ещё и заработать на путешествиях – у нас есть особое предложение.
 https://chat.whatsapp.com/BXfnpMNOHoW5vF8xg614eO
 
-Если ссылка не работает, просто ответь “ОК”, и сразу переходи по активной ссылке в чат. Мы тебя ждём!"""
+Если ссылка неактивна, просто напиши “ОК”, и сразу переходи по активной ссылке в чат. Мы тебя ждём!"""
 
 options = webdriver.FirefoxOptions()
 options.add_argument('-profile')
-options.add_argument('C:\\MEGA\\profiles\\firefox\\77757468937')
+options.add_argument('C:\\MEGA\\profiles\\firefox\\77002990331')
 
 driver = webdriver.Firefox(options=options)
 
@@ -37,6 +39,7 @@ WebDriverWait(driver, 10).until(
         (By.XPATH, f"//span[@dir='auto' and @style='min-height: 0px;' and contains(@class, '_ao3e') and text()='{number}']")
     )
 )
+
 lastMessage = driver.find_elements(By.CSS_SELECTOR, f'[role="row"]')[-1]
 links = lastMessage.find_elements(By.XPATH, "//a[@dir='auto' and @style='cursor: pointer;' and contains(@class, '_ao3e selectable-text copyable-text')]")
 print(f"Количество номеров в списке: {len(links)}")
@@ -56,7 +59,7 @@ while True:
         
         link = links[i]     # Переход к нужной ссылке
         link.click()
-        sleep(1)
+        sleep(2)
         
         try:
             # Ожидаем появление всплывающего окна с телефоном
@@ -64,31 +67,45 @@ while True:
             phone_text_elements = phone_popup.find_elements(By.XPATH, ".//li//div[contains(@aria-label, 'Чат с')]")
             
             if phone_text_elements:
+
                 phone_number = "+" + phone_text_elements[0].text.split("+")[-1]
                 print(f"Номер {phone_number} зарегистрирован")
                 phone_text_elements[0].click()
                 
-                sleep(random.uniform(1,2))
+                sleep(random.uniform(1,1.8))
 
                 try:
+                        
                         inputArea = driver.find_element(By.XPATH, waXPInputArea)
-                        sleep(0.3)
+
+                        sleep(random.uniform(0.4,1))
                         inputArea.send_keys(Keys.CONTROL, "v")
 
-                        sleep(random.uniform(0.2,0.7))
+                        sleep(random.uniform(0.3,0.7))
                         driver.find_element(By.XPATH, waXPButton).click()
-                        print(f"Сообщение на номер {phone_number} отправлено")
+
+                        print(f"{i}. Сообщение на номер {phone_number} отправлено")
+                        sleep(random.uniform(0.5,0.9))
+
+
                 except Exception as e:
-                        print(f"Не удалось отправить сообщение на {phone_number}", e)
+                        
+                        unsended.append(phone_number)
+                        print(f"{i}. Не удалось отправить сообщение на {phone_number}", e)
+                        sleep(10)
+                        element.click()
 
                 sleep(random.uniform(1,2))
                     
                 # Возвращаемся в исходный чат
-                element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'[title="{number}"]')))
                 element.click()
-                sleep(1)
+                sleep(random.uniform(0.2,0.7))
+
             else:
-                print(f"Номер {link.text} не зарегистрирован")
+                unregistered.append(link.text)
+                print(f"{i}. Номер {link.text} не зарегистрирован")
+
+                sleep(random.uniform(0.2,0.6))
                 element.click()
         except TimeoutException:
             print("Всплывающее окно с телефоном не найдено.")
@@ -100,6 +117,8 @@ while True:
         sleep(2)  # Пауза перед повторной попыткой
 
     except Exception as e:
-        print(f"Ошибка: {e}")
-
-driver.quit()
+        print(f"{i}. Ошибка: {e}")
+        sleep(10)
+print(f"Незарегистрированные номера:\n{unregistered}")
+print(f"Неотправленные номера:\n{unsended}")
+#driver.quit()
