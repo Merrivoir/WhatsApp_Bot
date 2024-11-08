@@ -11,6 +11,7 @@ options.set_preference("devtools.debugger.remote-port", 9223)
 options.add_argument('-profile')
 options.add_argument('C:\\MEGA\\profiles\\firefox\\' + number)
 
+print(f"Браузер запускается")
 driver = webdriver.Firefox(options=options)
 
 url = f"https://web.whatsapp.com/"
