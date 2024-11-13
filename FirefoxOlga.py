@@ -27,6 +27,14 @@ driver = webdriver.Firefox(options=options)
 url = f"https://web.whatsapp.com/"
 driver.get(url)
 
+try:
+    element = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()='Чаты']")))
+    print("Клиент запущен, чаты обнаружены")
+
+except Exception as e:
+    print(f"""Клиент не запущен
+          Ошибка {e}""")
+
 element = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'[title="{number}"]')))
 element.click()
 

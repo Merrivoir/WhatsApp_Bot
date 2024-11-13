@@ -17,7 +17,7 @@ unsended = []
 
 options =  webdriver.FirefoxOptions()
 options.add_argument('-profile')
-options.add_argument('C:\\MEGA\\profiles\\firefox\\77002990331')
+options.add_argument('C:\\MEGA\\profiles\\firefox\\77076261208')
 
 driver = webdriver.Firefox(options=options)
 tabs = driver.window_handles        # Переключаемся на нужную вкладку по индексу
@@ -26,7 +26,7 @@ print(tabs[0].title())
 
 url = f"https://web.whatsapp.com/"
 driver.get(url)
-sleep(10)
+sleep(6)
 
 element = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'[title="{number}"]')))
 element.click()
