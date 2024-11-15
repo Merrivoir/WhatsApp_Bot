@@ -8,7 +8,7 @@ from time import sleep
 from datetime import datetime, timedelta
 import pyperclip
 import random
-from CashFlow_chain import ColdBaseMsg as msg
+from CFMessages import ColdBaseMsg as msg
 
 print(f"----------------------------------------------------------------------------")
 print(f"Скрипт FirefoxOlga начал работу")

@@ -11,8 +11,8 @@ import random
 #блок импорта номеров и сообщений
 from Aiqerim import nm_aq as numbers
 from Aiqerim import message_aq1 as message
-from CashFlow_chain import msg_t1 as msg
-from CashFlow_chain import phoneNumbers1 as numbers
+from CFMessages import msg_t1 as msg
+from CFMessages import phoneNumbers1 as numbers
 
 #Элементы на странице
 modal_elem = '//*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[1]'

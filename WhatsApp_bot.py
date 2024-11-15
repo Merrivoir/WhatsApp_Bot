@@ -39,7 +39,7 @@ fileNameWithLastMessage = "lastmessage.txt"
 
 phonenumber = input('Введите номер от имени которого нужна рассылка: ')
 
-class whatapp():
+class whatsapp():
     """ Это класс бота для Whatsapp
        This class is bot for Whatsapp"""
 
