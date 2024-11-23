@@ -10,7 +10,6 @@ from datetime import datetime
 
 
 # Константы для Selenium
-# Constants for Selenium
 url = f"https://web.whatsapp.com/"
 xpath = "//button[@data-testid='compose-btn-send']"
 xpathAttach = "//div[@data-testid='conversation-clip']"
@@ -27,7 +26,6 @@ xpathText2 = "span[contains(@class,'copyable-text')]"
 commandEnableOrDisableJavaScript = "Emulation.setScriptExecutionDisabled"
 
 # Константы для обработки сообщений
-# Constants for message process
 messageIsOutgoing = "message-out"
 messageIsText = "data-pre-plain-text"
 messageClassOfBody = "selectable-text copyable-text"
@@ -40,8 +38,7 @@ fileNameWithLastMessage = "lastmessage.txt"
 phonenumber = input('Введите номер от имени которого нужна рассылка: ')
 
 class whatsapp():
-    """ Это класс бота для Whatsapp
-       This class is bot for Whatsapp"""
+    """ Это класс бота для Whatsapp"""
 
 
     def startBrowser(self):
@@ -154,7 +151,7 @@ def main(args):
 # основной бесконечный цикл. Прервать его - Ctrl+C
     try:
         while True:
-            wa = whatapp()
+            wa = whatsapp()
             wa.startBrowser()
             wa.searchGroup(args.group)
             dt = datetime.now()
