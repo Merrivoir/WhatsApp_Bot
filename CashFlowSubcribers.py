@@ -24,7 +24,7 @@ print(f"Скрипт open_driver начал работу - {datetime.now().strft
 options = webdriver.FirefoxOptions()
 
 options.add_argument('-profile')
-options.add_argument('C:\\Msync\\profiles\\firefox\\3755')
+options.add_argument('C:\\Msync\\profiles\\firefox\\77058893755')
 
 print(f"Браузер запускается")
 driver = webdriver.Firefox(options=options)
