@@ -10,8 +10,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 #импорт собственных модулей
-from CFMessages import ColdBaseMsg
-from CFNumbers import coldbase
+from CFMessages import msg_marathon
+from CFNumbers import numbers_marathon
 
 # XPath для модального окна и текста сообщения
 modal_xpath = '//*[@data-animate-modal-popup="true"]'
@@ -65,10 +65,10 @@ def sendMessage(status = False): #отправка сообщения
 testNumbers = ["77474728450","77777777777","77757468937","77089287735"]
 unregistered = []
 
-for number in coldbase[40:60]:
+for number in numbers_marathon:
     print(f"Обработка номера: {number}")
-    msg = random.choice(ColdBaseMsg)
-    encodedString = urllib.parse.quote(msg)
+    #msg = random.choice(ColdBaseMsg)
+    encodedString = urllib.parse.quote(msg_marathon)
     url = f"https://web.whatsapp.com/send?phone={number}" #&text={encodedString}"
     driver.get(url)
     #sleep(3000)
