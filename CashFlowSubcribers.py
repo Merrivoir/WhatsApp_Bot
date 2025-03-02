@@ -10,8 +10,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 
 #импорт собственных модулей
-from CFMessages import msg_marathon
-from CFNumbers import numbers_marathon
+from modules.CFMessages import msg_marathon
+from modules.CFNumbers import numbers_marathon
 
 # XPath для модального окна и текста сообщения
 modal_xpath = '//*[@data-animate-modal-popup="true"]'
@@ -24,7 +24,7 @@ print(f"Скрипт open_driver начал работу - {datetime.now().strft
 options = webdriver.FirefoxOptions()
 
 options.add_argument('-profile')
-options.add_argument('C:\\Msync\\profiles\\firefox\\3755')
+options.add_argument('C:\\Msync\\FFP')
 
 print(f"Браузер запускается")
 driver = webdriver.Firefox(options=options)
