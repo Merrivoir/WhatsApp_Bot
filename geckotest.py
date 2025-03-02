@@ -1,15 +1,15 @@
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+import requests
 
-options = Options()
-options.headless = True  # Только headless-режим, без лишних аргументов
+url = "https://7103.api.greenapi.com/waInstance7103145111/sendMessage/44cb1aca56fb4b02b4466c4c18b31a1583fb88b9b9634ff7b5"
 
-try:
-    driver = webdriver.Firefox(options=options)
-    driver.get("https://www.google.com")
-    print("Заголовок страницы:", driver.title)
-except Exception as e:
-    print("Ошибка:", e)
-finally:
-    if 'driver' in locals():
-        driver.quit()
+payload = {
+"chatId": "77474728450@c.us", 
+"message": "Тест сообщения"
+}
+headers = {
+'Content-Type': 'application/json'
+}
+
+response = requests.post(url, json=payload, headers=headers)
+
+print(response.text.encode('utf8'))
