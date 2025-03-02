@@ -1,7 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+from pyvirtualdisplay import Display
+
+# Запуск виртуального дисплея
+display = Display(visible=0, size=(1920, 1080))
+display.start()
 
 service = Service(log_path="geckodriver.log")
 
