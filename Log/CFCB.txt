@@ -238,3 +238,16 @@ NoSuchElementError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:511:5
 dom.find/</<@chrome://remote/content/shared/DOM.sys.mjs:136:16
 
 
+2025-01-07 23:34:30 | 77013812507
+Message: 
+Stacktrace:
+RemoteError@chrome://remote/content/shared/RemoteError.sys.mjs:8:8
+WebDriverError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:193:5
+NoSuchElementError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:511:5
+dom.find/</<@chrome://remote/content/shared/DOM.sys.mjs:136:16
+
+
+2025-01-07 23:34:41 | 77055855573
+Message: Failed to decode response from marionette
+
+
