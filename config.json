@@ -1,0 +1,5 @@
+{
+    "minDelay": 7,
+    "maxDelay": 23,
+    "dailyLimit": 100
+}
