@@ -1,0 +1,1 @@
+print("Hello, I am a bot that sends messages to WhatsApp contacts.")
