@@ -4,10 +4,14 @@ import csv
 import json
 import random
 import time
-from datetime import datetime
-
+import pyperclip
 import pyautogui
+
+from datetime import datetime
+from urllib.parse import quote
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -32,42 +36,52 @@ import random
 
 # Списки для живости сообщений
 greetings = [
-    "Здравствуйте, {name}.",
-    "Добрый день, {name}.",
-    "{name}, здарствуйте!",
+    "Здравствуйте, {name}",
+    "{name}, Здравствуйте",
 ]
 
 good_endings = [
-    "Хорошего дня! 🌟",
-    "Буду рад помочь! 🙌",
-    "Успехов и отличного настроения!",
-    "Если что — пишите!",
+    "",
+    "",
 ]
 
-def generate_message(name, templates):
-    """Генерация живого сообщения для контакта."""
+def generate_message(name, templates): 
+    """Генерация живого сообщения для контакта с учетом отсутствия имени."""
+    # Определяем, есть ли настоящее имя
+    has_real_name = name.lower() != "здравствуйте"
+
     # Выбираем случайный шаблон
     base_message = random.choice(templates)
-    base_message = base_message.replace("{name}", name)
+    base_message = base_message.replace("{name}", name) if has_real_name else base_message.replace("{name}", "")
 
     parts = []
 
-    # 80% шанс добавить приветствие
-    if random.random() < 0.8:
-        greet = random.choice(greetings).replace("{name}", name)
+    # Приветствие (с именем или без)
+    if random.random() < 1:
+        if has_real_name:
+            greet = random.choice(greetings).replace("{name}", name)
+        else:
+            greet = "Здравствуйте!"
         parts.append(greet)
 
-    # Добавляем основное сообщение
-    parts.append(base_message)
+    # Основное сообщение
+    parts.append("""
+Напоминаю, что каждую неделю мы проводим игру *CashFlow — мощный симулятор для прокачки финансового мышления*, навыков коммуникации и стратегии.
+                 
+📅 Расписание:
+_Среда, суббота, воскресенье с 11:00 до 15:00_
+                 
+Игра проходит в уютной атмосфере с поддержкой тренера и участием опытных предпринимателей.
+Если хотите присоединиться — пишите + в ответ""")
 
-    # 70% шанс добавить добрую фразу
+    # Завершение
     if random.random() < 0.7:
-        ending = random.choice(good_endings)
-        parts.append(ending)
+        parts.append(random.choice(good_endings))
 
-    # Склеиваем всё через перенос строки
-    final_message = "\n".join(parts)
+    # Склеиваем с переносами строк
+    final_message = "\n".join(part for part in parts if part.strip())
     return final_message
+
 
 def ensure_directories():
     """Создает необходимые папки и файлы при первом запуске."""
@@ -108,7 +122,9 @@ def load_contacts():
     with open(CONTACTS_FILE, encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            contacts.append({'name': row['name'], 'phone': row['phone']})
+            raw_name = row['name'].strip()
+            first_name = raw_name.split()[0] if raw_name else "Здравствуйте"
+            contacts.append({'name': first_name, 'phone': row['phone'].strip()})
     return contacts
 
 def load_sent_contacts():
@@ -162,23 +178,52 @@ def check_number_validity(driver):
 
 def send_message(driver, phone, message):
     """Отправляет сообщение через WhatsApp Web."""
-    url = f"https://web.whatsapp.com/send?phone={phone}&text={message}"
+    url = f"https://web.whatsapp.com/send?phone={phone}"
+    print(f"📨 Открываем чат с номером: {phone}")
     driver.get(url)
-    time.sleep(10)  # ждем загрузку чата
+    time.sleep(20)  # ждем загрузку чата
 
     slight_mouse_move()
+    print("🖱️ Немного подвинули мышку")
 
     if not check_number_validity(driver):
+        print("❌ Номер не зарегистрирован в WhatsApp")
         return 'not_registered'
 
     try:
-        send_button = driver.find_element(By.XPATH, '//span[@data-icon="wds-ic-send-filled"]')
-        send_button.click()
+        print("📋 Копируем сообщение в буфер обмена...")
+        pyperclip.copy(message)
+        time.sleep(0.2)
+        copied = pyperclip.paste()
+        if copied != message:
+            print("❌ Ошибка: сообщение не попало в буфер обмена!")
+            return 'clipboard_error'
+        print("📋 Сообщение в буфере подтверждено")
+
+        print("⌛ Ожидаем появление поля ввода сообщения...")
+        input_box = WebDriverWait(driver, 30).until(
+            lambda d: d.find_element(By.XPATH, '//div[@aria-placeholder="Введите сообщение"]')
+        )
+        print("✅ Поле ввода найдено. Кликаем...")
+        input_box.click()
+
+        # Обязательно активируем элемент на всякий случай
+        driver.execute_script("arguments[0].focus();", input_box)
+        time.sleep(0.5)
+
+        print("⌨️ Вставляем сообщение (Ctrl+V)...")
+        input_box.send_keys(Keys.CONTROL, 'v')
+        time.sleep(0.3)
+
+        print("📤 Отправляем сообщение (Enter)...")
+        input_box.send_keys(Keys.ENTER)
+        print("✅ Сообщение отправлено")
         return 'success'
+
     except Exception as e:
         print(f"⚠️ Ошибка при отправке: {e}")
         return 'error'
-    
+
 
 def print_status(message, color=Fore.WHITE):
     print(color + message + Style.RESET_ALL)
