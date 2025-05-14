@@ -8,15 +8,12 @@ import pyperclip
 import pyautogui
 
 from datetime import datetime
-from urllib.parse import quote
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from colorama import Fore, Style, init
 
 # Инициализация цветного вывода
@@ -216,12 +213,29 @@ def check_number_validity(driver):
         pass
     return True
 
+def wait_for_chat_ready(driver, timeout=40):
+    """Ожидает, пока модальное окно 'Начало чата' исчезнет и появится поле ввода."""
+    try:
+        # Ждем исчезновения перекрывающего окна, если оно появляется
+        WebDriverWait(driver, timeout).until_not(
+            EC.presence_of_element_located((By.XPATH, '//div[contains(@class, "xh8yej3")]'))
+        )
+        print("✅ Модальное окно 'Начало чата' исчезло")
+    except TimeoutException:
+        print("⚠️ Модальное окно не исчезло за отведённое время")
+
+    # Затем ждём появления поля для ввода сообщения
+    input_box = WebDriverWait(driver, timeout).until(
+        EC.element_to_be_clickable((By.XPATH, '//div[@aria-placeholder="Введите сообщение"]'))
+    )
+    return input_box
+
+
 def send_message(driver, phone, message):
     """Отправляет сообщение через WhatsApp Web."""
     url = f"https://web.whatsapp.com/send?phone={phone}"
     print(f"📨 Открываем чат с номером: {phone}")
     driver.get(url)
-    time.sleep(20)  # ждем загрузку чата
 
     slight_mouse_move()
     print("🖱️ Немного подвинули мышку")
@@ -240,14 +254,11 @@ def send_message(driver, phone, message):
             return 'clipboard_error'
         print("📋 Сообщение в буфере подтверждено")
 
-        print("⌛ Ожидаем появление поля ввода сообщения...")
-        input_box = WebDriverWait(driver, 30).until(
-            lambda d: d.find_element(By.XPATH, '//div[@aria-placeholder="Введите сообщение"]')
-        )
+        print("⌛ Ожидание готовности поля ввода...")
+        input_box = wait_for_chat_ready(driver)
+
         print("✅ Поле ввода найдено. Кликаем...")
         input_box.click()
-
-        # Обязательно активируем элемент на всякий случай
         driver.execute_script("arguments[0].focus();", input_box)
         time.sleep(0.5)
 
@@ -263,6 +274,7 @@ def send_message(driver, phone, message):
     except Exception as e:
         print(f"⚠️ Ошибка при отправке: {e}")
         return 'error'
+
 
 
 def print_status(message, color=Fore.WHITE):
