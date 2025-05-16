@@ -317,10 +317,10 @@ def main():
 
     try:
         chat_list_xpath = '//div[@id="pane-side"]'
-        WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, chat_list_xpath)))
+        WebDriverWait(driver, 300).until(EC.presence_of_element_located((By.XPATH, chat_list_xpath)))
         print(Fore.GREEN + "✅ Вы вошли в WhatsApp! Начинаем рассылку...")
     except Exception as e:
-        print(Fore.RED + "❌ Не удалось войти в WhatsApp за 2 минуты.")
+        print(Fore.RED + "❌ Не удалось войти в WhatsApp за 5 минут.")
         driver.quit()
         sys.exit()
 
