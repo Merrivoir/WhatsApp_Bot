@@ -213,22 +213,38 @@ def check_number_validity(driver):
         pass
     return True
 
-def wait_for_chat_ready(driver, timeout=40):
-    """Ожидает, пока модальное окно 'Начало чата' исчезнет и появится поле ввода."""
+def wait_for_chat_modal(driver, timeout=180):
+    modal_xpath = '//h1[text()="Начало чата"]/ancestor::div[@data-animate-modal-popup="true"]'
+    start_time = time.time()
+
     try:
-        # Ждем исчезновения перекрывающего окна, если оно появляется
-        WebDriverWait(driver, timeout).until_not(
-            EC.presence_of_element_located((By.XPATH, '//div[contains(@class, "xh8yej3")]'))
+        print("⌛ Ожидаем появления модального окна 'Начало чата'...")
+        WebDriverWait(driver, timeout).until(
+            EC.presence_of_element_located((By.XPATH, modal_xpath))
         )
-        print("✅ Модальное окно 'Начало чата' исчезло")
+        print("✅ Модальное окно появилось")
+
+    except TimeoutException:
+        print("⚠️ Модальное окно не появилось за отведённое время")
+        return False
+    except Exception as e:
+        print(f"⚠️ Ошибка при ожидании появления модального окна: {e}")
+        return False
+
+    try:
+        print("⌛ Ожидаем исчезновения модального окна...")
+        WebDriverWait(driver, timeout).until_not(
+            EC.presence_of_element_located((By.XPATH, modal_xpath))
+        )
+        print(f"✅ Модальное окно исчезло через {round(time.time() - start_time, 2)} секунд")
+        return True
+
     except TimeoutException:
         print("⚠️ Модальное окно не исчезло за отведённое время")
-
-    # Затем ждём появления поля для ввода сообщения
-    input_box = WebDriverWait(driver, timeout).until(
-        EC.element_to_be_clickable((By.XPATH, '//div[@aria-placeholder="Введите сообщение"]'))
-    )
-    return input_box
+        return False
+    except Exception as e:
+        print(f"⚠️ Ошибка при ожидании исчезновения модального окна: {e}")
+        return False
 
 
 def send_message(driver, phone, message):
@@ -236,6 +252,11 @@ def send_message(driver, phone, message):
     url = f"https://web.whatsapp.com/send?phone={phone}"
     print(f"📨 Открываем чат с номером: {phone}")
     driver.get(url)
+    
+    # Ждём появления и исчезновения модального окна "Начало чата"
+    if not wait_for_chat_modal(driver, timeout=300):
+        print("❌ Чат не готов. Прерываем отправку.")
+        return 'chat_not_ready'
 
     slight_mouse_move()
     print("🖱️ Немного подвинули мышку")
@@ -254,8 +275,11 @@ def send_message(driver, phone, message):
             return 'clipboard_error'
         print("📋 Сообщение в буфере подтверждено")
 
+        timeout = 30
         print("⌛ Ожидание готовности поля ввода...")
-        input_box = wait_for_chat_ready(driver)
+        input_box = WebDriverWait(driver, timeout).until(
+            EC.element_to_be_clickable((By.XPATH, '//div[@aria-placeholder="Введите сообщение"]'))
+        )
 
         print("✅ Поле ввода найдено. Кликаем...")
         input_box.click()
@@ -272,9 +296,8 @@ def send_message(driver, phone, message):
         return 'success'
 
     except Exception as e:
-        print(f"⚠️ Ошибка при отправке: {e}")
+        print(f"⚠️ Ошибка при отправке: {type(e).__name__}: {e}")
         return 'error'
-
 
 
 def print_status(message, color=Fore.WHITE):
@@ -341,7 +364,7 @@ def main():
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         if result == 'success':
-            log_to_csv(SUCCESS_LOG.replace('.txt', '.csv'), [name, phone, message, timestamp])
+            log_to_csv(SUCCESS_LOG.replace('.txt', '.csv'), [name, phone, message, timestamp ])
             print_status(f"✅ Успешно отправлено {name}", Fore.GREEN)
         elif result == 'not_registered':
             log_to_csv('logs/not_registered.csv', [name, phone, timestamp])
