@@ -20,7 +20,7 @@ from colorama import Fore, Style, init
 init(autoreset=True)
 
 # === Пути ===
-CONTACTS_FILE = 'contacts/contacts-test.csv'
+CONTACTS_FILE = 'contacts/List51.csv'
 TEMPLATES_FILE = 'templates/templates.txt'
 SUCCESS_LOG = 'logs/log_success_1805.txt'
 ERROR_LOG = 'logs/log_error.txt'
