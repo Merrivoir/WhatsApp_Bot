@@ -1,6 +1,6 @@
 from selenium import webdriver
 
-profile_path = r'C:\Users\Paul Lvov\AppData\Roaming\Mozilla\Firefox\Profiles\qa82eqx1.default'
+profile_path = r'C:\Users\Merri\AppData\Roaming\Mozilla\Firefox\Profiles\z1hmvzj2.default'
 options = webdriver.FirefoxOptions()
 options.add_argument("--start-maximized")
 options.add_argument('-profile')
