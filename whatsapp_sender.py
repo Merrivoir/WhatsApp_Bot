@@ -20,9 +20,9 @@ from colorama import Fore, Style, init
 init(autoreset=True)
 
 # === Пути ===
-CONTACTS_FILE = 'contacts/CashFlow.csv'
+CONTACTS_FILE = 'contacts/test.csv'
 TEMPLATES_FILE = 'templates/templates.txt'
-SUCCESS_LOG = 'logs/log_success_1805.txt'
+SUCCESS_LOG = 'logs/log_success_2206.csv'
 ERROR_LOG = 'logs/log_error.txt'
 REPORT_FILE = 'logs/report.txt'
 CONFIG_FILE = 'config.json'
@@ -90,11 +90,10 @@ def generate_message(name, templates):
 Это идеальное начало, если вы давно хотели разобраться в деньгах, но не знали, с чего начать.
 
 Буду рада видеть вас в числе участников!
-С уважением,
-Ольга Львова"""
+С уважением, Ольга Львова"""
     
     parts.append("""
-ведущая игр CashFlow, эксперт по финансовой грамотности и инвестициям.
+Это Ольга Львова - ведущая игр CashFlow, эксперт по финансовой грамотности и инвестициям.
 
 Вы уже были у нас на игре, а значит — знаете, насколько важно уметь управлять деньгами и принимать осознанные финансовые решения.
 
@@ -118,8 +117,6 @@ def generate_message(name, templates):
 «ХОЧУ КУРС», и я пришлю вам ссылку на канал, где вы сможете ознакомиться с программой курса
 
 Буду рада видеть вас в числе участников!
-С уважением,
-Ольга Львова
 """)
 
     # Завершение
