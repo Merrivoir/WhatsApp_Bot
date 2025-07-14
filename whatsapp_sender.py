@@ -500,7 +500,7 @@ def main():
         WebDriverWait(driver, 600).until(EC.presence_of_element_located((By.XPATH, chat_list_xpath)))
         print(Fore.GREEN + "✅ Вы вошли в WhatsApp! Начинаем рассылку...")
     except Exception as e:
-        print(Fore.RED + "❌ Не удалось войти в WhatsApp за 5 минут.")
+        print(Fore.RED + "❌ Не удалось войти в WhatsApp за 10 минут.")
         driver.quit()
         sys.exit()
 
@@ -521,7 +521,7 @@ def main():
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         if result == 'success':
-            log_to_csv(SUCCESS_LOG.replace('.txt', '.csv'), [name, phone, message, timestamp ])
+            log_to_csv(SUCCESS_LOG.replace('.txt', '.csv'), [name, phone, timestamp ])
             print_status(f"{sent_count + 1} ✅ Успешно отправлено {name}", Fore.GREEN)
         elif result == 'not_registered':
             log_to_csv('logs/not_registered.csv', [name, phone, timestamp])
